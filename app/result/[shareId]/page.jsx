@@ -4,6 +4,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import html2canvas from "html2canvas";
 import TasteCard from "../../../components/TasteCard";
+import { supabase } from "../../../lib/supabaseClient";
 
 export default function ResultScreen() {
   const { shareId } = useParams();
@@ -23,13 +24,28 @@ export default function ResultScreen() {
   const fetchProfileData = async () => {
     setIsLoading(true);
     try {
+      // 1. Try loading from localStorage first (fastest)
       const savedProfile = localStorage.getItem(`taste_profile_${shareId}`);
       if (savedProfile) {
         const parsedProfile = JSON.parse(savedProfile);
-        console.log(`[Result] Loaded profile for shareId: ${shareId}`, parsedProfile);
+        console.log(`[Result] Loaded profile from localStorage for shareId: ${shareId}`, parsedProfile);
         setProfile(parsedProfile);
+        setIsLoading(false);
+        return;
+      }
+
+      // 2. Fallback to Supabase database
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("profile_data")
+        .eq("share_id", shareId)
+        .single();
+
+      if (data && data.profile_data) {
+        console.log(`[Result] Loaded profile from Supabase for shareId: ${shareId}`);
+        setProfile(data.profile_data);
       } else {
-        console.warn(`[Result] No profile found in localStorage for shareId: ${shareId}`);
+        console.warn(`[Result] No profile found in localStorage or Supabase for shareId: ${shareId}`);
       }
     } catch (error) {
       console.error("Failed to load profile:", error);
@@ -79,7 +95,7 @@ export default function ResultScreen() {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-[#0a0a0a] text-white p-6 text-center">
         <h1 className="text-4xl font-bold mb-4">Something went wrong</h1>
-        <p className="text-white/60 mb-8 max-w-md text-lg">We couldn't generate your profile properly. The AI might have timed out or returned an invalid format.</p>
+        <p className="text-white/60 mb-8 max-w-md text-lg">We couldn&apos;t generate your profile properly. The AI might have timed out or returned an invalid format.</p>
         <button onClick={handleRetake} className="px-6 py-3 bg-white text-black font-bold rounded-xl uppercase tracking-wider text-sm transition-all hover:scale-105 active:scale-95">
           Retake Quiz
         </button>
@@ -156,8 +172,8 @@ export default function ResultScreen() {
           
           <div className="flex items-center justify-center animate-fade-up" style={sectionDelay(5)}>
             <blockquote className="relative">
-              <span className="absolute -top-10 -left-8 text-8xl text-white/10 font-serif">"</span>
-              <p className="text-3xl md:text-4xl font-serif italic font-light leading-snug text-white/80">
+              <span className="absolute -top-10 -left-8 text-8xl text-white/10 font-bold">&quot;</span>
+              <p className="text-3xl md:text-4xl italic font-light leading-snug text-white/80">
                 {profile.oneliner}
               </p>
             </blockquote>

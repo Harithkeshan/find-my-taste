@@ -12,9 +12,9 @@ const TasteCard = forwardRef(({ profile }, ref) => {
   return (
     <div 
       ref={ref}
-      className="w-[400px] bg-[#0a0a0a] rounded-3xl relative overflow-hidden flex flex-col justify-between p-12 taste-card-glow"
+      className="w-[360px] sm:w-[380px] bg-[#0a0a0a] rounded-3xl relative overflow-hidden flex flex-col justify-between p-7 taste-card-glow text-left select-none"
       style={{
-        height: '650px',
+        height: '640px',
         border: `1.5px solid ${primaryColor}`,
       }}
     >
@@ -60,10 +60,10 @@ const TasteCard = forwardRef(({ profile }, ref) => {
       </div>
 
       {/* Card Content - Top */}
-      <div className="relative z-10 flex justify-between items-start">
-        <span className="text-[10px] font-black tracking-[0.3em] text-white/40 mt-2 uppercase">FIND MY TASTE</span>
+      <div className="relative z-10 flex justify-between items-center">
+        <span className="text-[10px] font-black tracking-[0.3em] text-white/40 uppercase">FIND MY TASTE</span>
         <div 
-          className="px-4 py-1.5 rounded-full text-xs font-bold tracking-widest bg-white/10 backdrop-blur-md border border-white/20 text-white uppercase flex items-center gap-2"
+          className="px-3 py-1 rounded-full text-[11px] font-bold tracking-widest bg-white/10 backdrop-blur-md border border-white/20 text-white uppercase flex items-center gap-1.5"
           style={{ boxShadow: `0 0 20px ${primaryColor}50` }}
         >
           {emoji} {category || "PROFILE"}
@@ -71,25 +71,24 @@ const TasteCard = forwardRef(({ profile }, ref) => {
       </div>
 
       {/* Card Content - Middle (archetype + tagline) */}
-      <div className="relative z-10 flex flex-col justify-center flex-1 py-8">
+      <div className="relative z-10 flex flex-col justify-center flex-1 my-4 space-y-3">
         <h2 
-          className="font-black leading-[1.0] tracking-tighter text-white drop-shadow-2xl mb-5"
-          style={{ fontSize: 'clamp(2.8rem, 10vw, 4.2rem)' }}
+          className="font-display font-normal leading-[1.25] tracking-wider text-white drop-shadow-2xl text-2xl sm:text-3xl"
         >
           {archetype}
         </h2>
-        <p className="text-lg font-light text-white/65 leading-snug drop-shadow-md">
+        <p className="text-sm font-normal text-white/70 leading-relaxed drop-shadow-md line-clamp-3">
           {tagline}
         </p>
       </div>
 
       {/* Card Content - Bottom */}
-      <div className="relative z-10 mt-auto">
-        <div className="flex flex-wrap gap-2 mb-5">
+      <div className="relative z-10 mt-auto space-y-4">
+        <div className="flex flex-wrap gap-1.5">
           {(traits || []).map((trait, idx) => (
             <span 
               key={idx}
-              className="px-4 py-2 rounded-full text-sm font-bold bg-black/60 backdrop-blur-xl border border-white/10"
+              className="px-3 py-1 rounded-full text-xs font-semibold bg-black/60 backdrop-blur-xl border border-white/10"
               style={{ color: colors ? colors[idx % colors.length] : '#fff' }}
             >
               {trait}
@@ -98,12 +97,12 @@ const TasteCard = forwardRef(({ profile }, ref) => {
         </div>
         
         {oneliner && (
-          <p className="text-[13px] italic font-serif text-white/50 mb-6 leading-relaxed">
-            "{oneliner}"
+          <p className="text-xs italic text-white/60 leading-relaxed line-clamp-3 font-normal">
+            &quot;{oneliner}&quot;
           </p>
         )}
 
-        <div className="text-[10px] font-bold tracking-widest text-white/25 text-right uppercase">
+        <div className="text-[10px] font-bold tracking-widest text-white/30 text-right uppercase pt-1">
           findmytaste.app
         </div>
       </div>

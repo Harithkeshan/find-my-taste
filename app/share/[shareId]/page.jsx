@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import TasteCard from "../../../components/TasteCard";
+import { supabase } from "../../../lib/supabaseClient";
 
 /**
  * PUBLIC SHARE PAGE (/app/share/[shareId]/page.jsx)
@@ -35,24 +36,20 @@ export default function PublicSharePage() {
   const fetchPublicProfile = async () => {
     setIsLoading(true);
     try {
-      // TODO: Retrieve public profile by shareId from Supabase
-      // const { data, error } = await supabase.from('profiles').select('*').eq('share_id', shareId).single();
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("profile_data")
+        .eq("share_id", shareId)
+        .single();
 
-      // Mock data for scaffolding:
-      setTimeout(() => {
-        setProfile({
-          archetype: "The Cozy Culinary Curator",
-          description: "You appreciate comfort food with an artistic spin. Every meal is an opportunity for connection, and you prefer warm, rustic environments over high-tech dining spots.",
-          keyTraits: ["Nostalgic", "Detail-Oriented", "Warm-hearted", "Comfort seeker"],
-          aesthetics: {
-            theme: "warm-woodlands",
-            gradientStart: "#df8b53",
-            gradientEnd: "#824b20",
-            textColor: "#ffffff"
-          }
-        });
+      if (error || !data) {
+        console.error("Failed to load public profile from Supabase:", error);
         setIsLoading(false);
-      }, 1000);
+        return;
+      }
+
+      setProfile(data.profile_data);
+      setIsLoading(false);
     } catch (error) {
       console.error("Failed to load public profile:", error);
       setIsLoading(false);

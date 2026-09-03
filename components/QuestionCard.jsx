@@ -6,7 +6,7 @@ export default function QuestionCard({ question, options = [], onSelectOption, s
   return (
     <div className="w-full bg-[#121212]/90 border border-white/10 rounded-3xl p-6 md:p-8 shadow-2xl backdrop-blur-xl animate-fade-in">
       {/* Question Header */}
-      <h2 className="text-2xl md:text-3xl font-extrabold text-white mb-8 leading-tight tracking-tight">
+      <h2 className="text-2xl md:text-3xl font-normal text-white mb-8 leading-relaxed tracking-wide">
         {question}
       </h2>
 
@@ -23,7 +23,7 @@ export default function QuestionCard({ question, options = [], onSelectOption, s
               key={idx}
               onClick={() => !isDisabled && onSelectOption(option)}
               disabled={isDisabled}
-              className={`w-full text-left p-5 rounded-2xl border-2 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-white/20 font-bold text-lg flex items-center
+              className={`w-full text-left p-5 rounded-2xl border-2 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-white/20 font-semibold text-base md:text-lg flex items-center
                 ${
                   isSelected
                     ? "bg-white text-black border-white scale-[1.02] shadow-[0_0_20px_rgba(255,255,255,0.3)]"

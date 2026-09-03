@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import QuestionCard from "../../../components/QuestionCard";
 import { questions as allQuestions } from "../../../lib/questions";
+import { supabase } from "../../../lib/supabaseClient";
 
 export default function QuizScreen() {
   const { category } = useParams();
@@ -30,18 +31,23 @@ export default function QuizScreen() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ category, answers: finalAnswers }),
       });
-      const profileData = await response.json();
+      const data = await response.json();
 
-      if (!response.ok || profileData.error || !profileData.sections) {
-        console.error("[Quiz] API returned an error or invalid profile:", profileData);
+      if (!response.ok || data.error || !data.sections) {
+        console.error("[Quiz] API returned an error or invalid profile:", data);
         setIsGeneratingProfile(false);
         alert("Failed to generate your profile. Please try again.");
         return;
       }
       
-      const shareId = crypto.randomUUID();
-      localStorage.setItem(`taste_profile_${shareId}`, JSON.stringify(profileData));
-      console.log(`[Quiz] Saved profile for shareId: ${shareId}`, profileData);
+      const shareId = data.shareId || crypto.randomUUID();
+      
+      if (data.dbError) {
+        console.warn("[Quiz] Supabase DB insert warning:", data.dbError);
+      }
+
+      // Store in localStorage as local fallback cache
+      localStorage.setItem(`taste_profile_${shareId}`, JSON.stringify(data));
       
       router.push(`/result/${shareId}`);
     } catch (error) {

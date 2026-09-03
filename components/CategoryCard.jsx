@@ -40,7 +40,7 @@ export default function CategoryCard({ category }) {
           <h3 className="text-lg md:text-xl font-bold text-white transition-colors duration-200">
             {name}
           </h3>
-          <p className="text-xs md:text-sm text-neutral-400 mt-1 line-clamp-2">
+          <p className="text-xs md:text-sm text-neutral-400 mt-1 font-normal line-clamp-2">
             {description}
           </p>
         </div>

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { supabase } from "../../../lib/supabaseClient";
 
 export async function POST(request) {
   try {
@@ -107,8 +108,24 @@ Colors must reflect emotional tone:
         return section;
       });
     }
+
+    // --- Save to Supabase Server-Side ---
+    const shareId = crypto.randomUUID();
+    const { error: dbError } = await supabase.from("profiles").insert([
+      { share_id: shareId, profile_data: profileData }
+    ]);
+
+    if (dbError) {
+      console.error("[profile API] ❌ Supabase insert error:", dbError);
+    } else {
+      console.log(`[profile API] ✅ Saved profile to Supabase with shareId: ${shareId}`);
+    }
     
-    return NextResponse.json(profileData);
+    return NextResponse.json({
+      ...profileData,
+      shareId,
+      dbError: dbError ? dbError.message : null
+    });
 
   } catch (error) {
     console.error("Error in /api/profile:", error);

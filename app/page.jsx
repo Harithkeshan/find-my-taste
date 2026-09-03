@@ -62,18 +62,18 @@ export default function LandingPage() {
         
         {/* HERO SECTION */}
         <section className="text-center space-y-6">
-          <div className="inline-block px-3 py-1 rounded-full border border-neutral-800 bg-[#121212]/50 text-xs font-semibold tracking-wider text-neutral-400 uppercase mb-2">
-            AI-Powered Personality Analysis
+          <div className="inline-block px-4 py-1.5 rounded-full border border-neutral-800 bg-[#121212]/80 backdrop-blur-md text-xs font-semibold tracking-wider text-neutral-300 uppercase mb-2 shadow-sm">
+            ✨ AI-Powered Personality Analysis
           </div>
           
-          <h1 className="text-5xl md:text-8xl font-black tracking-tighter select-none">
-            Find My{" "}
-            <span className="bg-gradient-to-r from-[#ff007f] via-[#7f00ff] to-[#00f0ff] bg-[length:200%_auto] bg-clip-text text-transparent animate-gradient">
+          <h1 className="text-5xl md:text-7xl font-normal tracking-wider select-none space-x-2">
+            <span>Find My</span>{" "}
+            <span className="bg-gradient-to-r from-[#ff007f] via-[#7f00ff] to-[#00f0ff] bg-[length:200%_auto] bg-clip-text text-transparent animate-gradient inline-block ml-3">
               Taste
             </span>
           </h1>
 
-          <p className="text-xl md:text-3xl font-extrabold text-neutral-300 max-w-3xl mx-auto leading-tight">
+          <p className="text-xl md:text-3xl font-semibold text-neutral-300 max-w-3xl mx-auto leading-snug">
             Answer a few questions. Discover exactly who you are.
           </p>
 
@@ -91,10 +91,10 @@ export default function LandingPage() {
         {/* CATEGORY GRID */}
         <section className="space-y-6">
           <div className="flex items-center justify-between border-b border-neutral-900 pb-3">
-            <h2 className="text-xs uppercase tracking-widest text-neutral-500 font-bold">
+            <h2 className="text-xs uppercase tracking-widest text-neutral-400 font-medium">
               Select your category
             </h2>
-            <span className="text-xs text-neutral-600">8 Curated Archetypes</span>
+            <span className="text-xs text-neutral-500 font-normal">8 Curated Archetypes</span>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
@@ -112,9 +112,9 @@ export default function LandingPage() {
       <footer className="border-t border-neutral-900 bg-[#050505] py-8 z-10">
         <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center space-x-2">
-            <span className="text-lg font-black tracking-tight">Find My Taste</span>
+            <span className="text-base font-medium tracking-tight">Find My Taste</span>
             <span className="text-neutral-700">|</span>
-            <span className="text-xs text-neutral-500 font-medium">Identify Your Aesthetic Vibe</span>
+            <span className="text-xs text-neutral-500 font-normal">Identify Your Aesthetic Vibe</span>
           </div>
           <div className="text-xs text-neutral-600">
             © {new Date().getFullYear()} Find My Taste. Made with Gemini API.
