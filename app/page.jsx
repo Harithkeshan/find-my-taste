@@ -2,15 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { 
-  Film, 
-  Headphones, 
-  UtensilsCrossed, 
-  BookOpen, 
-  Gamepad2, 
-  Compass, 
-  Sparkles, 
-  Trophy, 
   ChevronLeft, 
   ChevronRight, 
   ArrowRight 
@@ -19,122 +12,106 @@ import {
 const CATEGORIES = [
   { 
     id: "movies", 
-    name: "Cinema & Movies", 
-    tagline: "Uncover your cinematic aesthetic", 
-    description: "From moody indie auteur films to psychological thrillers and blockbusters.",
-    icon: Film,
+    name: "Movies", 
+    tagline: "Cinematic styles & auteur visions",
+    image: "/categories/movies.jpg",
     theme: { 
-      bg: "#fdf6f0", 
-      accent: "#c2410c", 
-      pillBg: "bg-orange-100", 
-      pillText: "text-orange-800",
-      buttonBg: "bg-orange-600 hover:bg-orange-700",
-      glow: "rgba(194, 65, 12, 0.15)"
+      bg: "#fef3c7", // Sunny Golden Yellow
+      accent: "#d97706", 
+      orbPrimary: "rgba(245, 158, 11, 0.42)",
+      orbSecondary: "rgba(234, 88, 12, 0.30)",
+      orbBottom: "rgba(253, 224, 71, 0.45)"
     }
   },
   { 
     id: "music", 
-    name: "Sound & Music", 
-    tagline: "Tune into your auditory profile", 
-    description: "Explore the sonic textures, rhythms, and poetic themes that move you.",
-    icon: Headphones,
+    name: "Music", 
+    tagline: "Sonic textures & auditory moods",
+    image: "/categories/music.jpg",
     theme: { 
-      bg: "#f7f5ff", 
+      bg: "#f3e8ff", // Vibrant Violet / Lavender
       accent: "#7c3aed", 
-      pillBg: "bg-purple-100", 
-      pillText: "text-purple-800",
-      buttonBg: "bg-purple-600 hover:bg-purple-700",
-      glow: "rgba(124, 58, 237, 0.15)"
+      orbPrimary: "rgba(168, 85, 247, 0.45)",
+      orbSecondary: "rgba(129, 140, 248, 0.35)",
+      orbBottom: "rgba(216, 180, 254, 0.45)"
     }
   },
   { 
     id: "food", 
-    name: "Culinary & Dining", 
-    tagline: "Discover your culinary persona", 
-    description: "Flavor profiles, dining atmospheres, comfort textures, and taste instincts.",
-    icon: UtensilsCrossed,
+    name: "Food", 
+    tagline: "Culinary instincts & dining rituals",
+    image: "/categories/food.jpg",
     theme: { 
-      bg: "#fff8ee", 
-      accent: "#d97706", 
-      pillBg: "bg-amber-100", 
-      pillText: "text-amber-800",
-      buttonBg: "bg-amber-600 hover:bg-amber-700",
-      glow: "rgba(217, 119, 6, 0.15)"
+      bg: "#ffedd5", // Warm Radiant Coral / Tangerine
+      accent: "#ea580c", 
+      orbPrimary: "rgba(249, 115, 22, 0.45)",
+      orbSecondary: "rgba(244, 63, 94, 0.32)",
+      orbBottom: "rgba(254, 215, 170, 0.45)"
     }
   },
   { 
     id: "books", 
-    name: "Literature & Books", 
-    tagline: "Reveal your reading perspective", 
-    description: "World-building, complex characters, philosophical depth, and poetic prose.",
-    icon: BookOpen,
+    name: "Books", 
+    tagline: "Literary depths & narrative voice",
+    image: "/categories/books.jpg",
     theme: { 
-      bg: "#f2f8f4", 
+      bg: "#dcfce7", // Botanical Emerald / Mint Green
       accent: "#059669", 
-      pillBg: "bg-emerald-100", 
-      pillText: "text-emerald-800",
-      buttonBg: "bg-emerald-600 hover:bg-emerald-700",
-      glow: "rgba(5, 150, 105, 0.15)"
+      orbPrimary: "rgba(16, 185, 129, 0.45)",
+      orbSecondary: "rgba(5, 150, 105, 0.32)",
+      orbBottom: "rgba(134, 239, 172, 0.45)"
     }
   },
   { 
     id: "games", 
-    name: "Gaming & Playstyles", 
-    tagline: "Find your digital mindset", 
-    description: "Strategic loops, rich interactive storytelling, competition, and cozy sims.",
-    icon: Gamepad2,
+    name: "Games", 
+    tagline: "Digital loops & interactive playstyles",
+    image: "/categories/games.jpg",
     theme: { 
-      bg: "#f0f8ff", 
+      bg: "#e0f2fe", // Electric Sky Blue
       accent: "#0284c7", 
-      pillBg: "bg-sky-100", 
-      pillText: "text-sky-800",
-      buttonBg: "bg-sky-600 hover:bg-sky-700",
-      glow: "rgba(2, 132, 199, 0.15)"
+      orbPrimary: "rgba(14, 165, 233, 0.48)",
+      orbSecondary: "rgba(59, 130, 246, 0.35)",
+      orbBottom: "rgba(125, 211, 252, 0.45)"
     }
   },
   { 
     id: "travel", 
-    name: "Travel & Wanderlust", 
-    tagline: "Map your exploration vibe", 
-    description: "Spontaneous wandering, secluded coasts, historic villages, and local culture.",
-    icon: Compass,
+    name: "Travel", 
+    tagline: "Cultural immersion & landscapes",
+    image: "/categories/travel.jpg",
     theme: { 
-      bg: "#edf9fa", 
+      bg: "#ccfbf1", // Ocean Aqua / Turquoise
       accent: "#0891b2", 
-      pillBg: "bg-cyan-100", 
-      pillText: "text-cyan-800",
-      buttonBg: "bg-cyan-600 hover:bg-cyan-700",
-      glow: "rgba(8, 145, 178, 0.15)"
+      orbPrimary: "rgba(20, 184, 166, 0.45)",
+      orbSecondary: "rgba(6, 182, 212, 0.35)",
+      orbBottom: "rgba(94, 234, 212, 0.45)"
     }
   },
   { 
     id: "fashion", 
-    name: "Style & Fashion", 
-    tagline: "Define your aesthetic statement", 
-    description: "Silhouettes, vintage staples, tailored neutrals, and expressive confidence.",
-    icon: Sparkles,
+    name: "Fashion", 
+    tagline: "Silhouettes & personal aesthetic",
+    image: "/categories/fashion.jpg",
     theme: { 
-      bg: "#fff2f5", 
+      bg: "#ffe4e6", // Haute Couture Rose Pink
       accent: "#e11d48", 
-      pillBg: "bg-rose-100", 
-      pillText: "text-rose-800",
-      buttonBg: "bg-rose-600 hover:bg-rose-700",
-      glow: "rgba(225, 29, 72, 0.15)"
+      orbPrimary: "rgba(244, 63, 94, 0.45)",
+      orbSecondary: "rgba(236, 72, 153, 0.35)",
+      orbBottom: "rgba(251, 113, 133, 0.45)"
     }
   },
   { 
     id: "sports", 
-    name: "Athletics & Sport", 
-    tagline: "Unlock your athletic mindset", 
-    description: "High-octane competition, tactical endurance, outdoor adventure, and flow state.",
-    icon: Trophy,
+    name: "Sports", 
+    tagline: "Endurance, strategy & athletic mindset",
+    image: "/categories/sports.jpg",
     theme: { 
-      bg: "#f5faee", 
-      accent: "#65a30d", 
-      pillBg: "bg-lime-100", 
-      pillText: "text-lime-800",
-      buttonBg: "bg-lime-600 hover:bg-lime-700",
-      glow: "rgba(101, 163, 13, 0.15)"
+      bg: "#fee2e2", // Dynamic Crimson / Scarlet Red
+      accent: "#dc2626", 
+      orbPrimary: "rgba(239, 68, 68, 0.46)",
+      orbSecondary: "rgba(220, 38, 38, 0.35)",
+      orbBottom: "rgba(252, 165, 165, 0.45)"
     }
   }
 ];
@@ -152,7 +129,6 @@ export default function LandingPage() {
     setActiveIndex((prev) => (prev === CATEGORIES.length - 1 ? 0 : prev + 1));
   };
 
-  // Keyboard navigation for desktop accessibility
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === "ArrowLeft") handlePrev();
@@ -164,113 +140,83 @@ export default function LandingPage() {
 
   return (
     <div 
-      className="min-h-screen flex flex-col justify-between text-neutral-900 transition-colors duration-700 ease-out relative overflow-hidden select-none"
+      className="min-h-screen flex flex-col justify-between text-neutral-900 transition-colors duration-700 ease-out relative overflow-hidden select-none font-sans"
       style={{ backgroundColor: activeCategory.theme.bg }}
     >
-      {/* Ambient Cloud Gradients */}
+      {/* ------------------------------------------------------------- */}
+      {/* LIVING AURORA MESH (Option 1) + ARCHITECTURAL DOT MATRIX (Option 2) */}
+      {/* ------------------------------------------------------------- */}
+      {/* Layer 1: Left Aurora Orb (Primary Category Aura, Breathing) */}
       <div 
-        className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] rounded-full blur-[160px] pointer-events-none transition-colors duration-700" 
-        style={{ backgroundColor: activeCategory.theme.glow }}
+        className="absolute -top-[12%] -left-[10%] w-[58vw] h-[58vw] max-w-[750px] max-h-[750px] rounded-full blur-[140px] pointer-events-none transition-all duration-700 ease-out animate-float-slow"
+        style={{ backgroundColor: activeCategory.theme.orbPrimary }}
       />
+
+      {/* Layer 2: Right Aurora Orb (Secondary Category Aura, Breathing) */}
       <div 
-        className="absolute bottom-[-15%] right-[-10%] w-[50%] h-[50%] rounded-full blur-[160px] pointer-events-none transition-colors duration-700" 
-        style={{ backgroundColor: activeCategory.theme.glow }}
+        className="absolute -top-[10%] -right-[10%] w-[52vw] h-[52vw] max-w-[700px] max-h-[700px] rounded-full blur-[140px] pointer-events-none transition-all duration-700 ease-out animate-float-reverse"
+        style={{ backgroundColor: activeCategory.theme.orbSecondary }}
       />
 
-      {/* TOP NAVIGATION BAR */}
-      <header className="max-w-7xl w-full mx-auto px-6 py-6 md:py-8 flex items-center justify-between z-20">
-        <div className="flex items-center gap-3">
-          <span className="font-display font-black text-2xl tracking-tight text-neutral-900">
-            Find My Taste
-          </span>
-          <span className="hidden sm:inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-widest bg-neutral-900/5 text-neutral-600 border border-neutral-900/10">
-            Index
-          </span>
-        </div>
+      {/* Layer 3: Central-Bottom Grounding Glow */}
+      <div 
+        className="absolute -bottom-[15%] left-[15%] w-[70vw] h-[45vw] max-w-[900px] rounded-full blur-[160px] pointer-events-none transition-all duration-700 ease-out"
+        style={{ backgroundColor: activeCategory.theme.orbBottom }}
+      />
 
-        {/* Center Nav Links */}
-        <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-neutral-600">
-          <span className="text-neutral-900 cursor-pointer">Categories</span>
-          <a href="#how-it-works" className="hover:text-neutral-900 transition-colors">How It Works</a>
-          <a href="#about" className="hover:text-neutral-900 transition-colors">About</a>
-        </nav>
+      {/* Layer 4: Architectural Coordinate Micro-Dot Grid (Crisp & Visible) */}
+      <div 
+        className="absolute inset-0 pointer-events-none z-0"
+        style={{
+          backgroundImage: "radial-gradient(circle, rgba(0, 0, 0, 0.16) 1.5px, transparent 1.5px)",
+          backgroundSize: "28px 28px",
+        }}
+      />
 
-        {/* Right CTA Button */}
-        <div>
-          <Link
-            href={`/quiz/${activeCategory.id}`}
-            className="inline-flex items-center justify-center px-6 py-2.5 rounded-full bg-neutral-950 text-white text-sm font-medium hover:bg-neutral-800 transition-all duration-200 shadow-sm active:scale-95"
-          >
-            Start Quiz
-          </Link>
+      {/* MINIMAL TOP BAR */}
+      <header className="max-w-7xl w-full mx-auto px-6 py-6 flex items-center justify-between z-20">
+        <span className="font-display font-black text-2xl tracking-tight text-neutral-900">
+          Find My Taste
+        </span>
+        <div className="text-xs font-semibold text-neutral-500 uppercase tracking-widest">
+          Aesthetic Index
         </div>
       </header>
 
-      {/* MAIN HERO CONTENT */}
-      <main className="max-w-6xl w-full mx-auto px-6 pt-4 pb-12 flex-grow flex flex-col items-center justify-center text-center z-10">
+      {/* MAIN VIEWPORT (Clean, compact, no clutter) */}
+      <main className="max-w-6xl w-full mx-auto px-6 flex-grow flex flex-col items-center justify-center text-center z-10 py-4">
         
-        {/* Subtle Pill Tag */}
-        <div className="inline-flex items-center gap-2 mb-6">
-          <span className="text-xs font-semibold tracking-widest uppercase text-neutral-500">
-            ( A BETTER WAY TO DISCOVER YOURSELF )
-          </span>
-        </div>
-
-        {/* Main Headline */}
-        <h1 className="font-display text-4xl sm:text-6xl md:text-7xl font-extrabold text-neutral-900 tracking-tight leading-[1.08] max-w-4xl mx-auto mb-6">
-          Feel clearer in your taste. <br className="hidden sm:block" />
-          Confident in your mind.
-        </h1>
-
-        {/* Supporting Subtitle */}
-        <p className="text-base sm:text-lg md:text-xl text-neutral-600 font-normal max-w-2xl mx-auto leading-relaxed mb-10">
-          Personalized aesthetic guidance to help you articulate your unique preferences, understand your instincts, and curate your world.
-        </p>
-
-        {/* Hero Pill Buttons */}
-        <div className="flex flex-wrap items-center justify-center gap-3 mb-16">
-          <Link
-            href={`/quiz/${activeCategory.id}`}
-            className="px-7 py-3 rounded-full bg-neutral-950 text-white text-sm font-medium hover:bg-neutral-800 transition-all duration-200 shadow-md active:scale-95 flex items-center gap-2"
-          >
-            Explore {activeCategory.name.split(" ")[0]}
-            <ArrowRight className="w-4 h-4" />
-          </Link>
-          <a
-            href="#how-it-works"
-            className="px-7 py-3 rounded-full bg-white/70 backdrop-blur-md border border-neutral-300 text-neutral-800 text-sm font-medium hover:bg-white transition-all duration-200 shadow-sm active:scale-95"
-          >
-            How It Works
-          </a>
+        {/* Simple, Punchy Header */}
+        <div className="mb-8 md:mb-12">
+          <h1 className="font-display text-4xl sm:text-6xl md:text-7xl font-extrabold text-neutral-900 tracking-tight leading-tight mb-3">
+            What&apos;s your taste?
+          </h1>
+          <p className="text-base sm:text-lg text-neutral-600 font-normal max-w-xl mx-auto">
+            Choose a category to discover your unique aesthetic archetype.
+          </p>
         </div>
 
         {/* ----------------------------------------------------------- */}
-        {/* HORIZONTAL LINEAR SLIDER (Flat, perfectly legible)          */}
+        {/* STRAIGHT HORIZONTAL CAROUSEL (Fully visible above the fold) */}
         {/* ----------------------------------------------------------- */}
-        <section className="w-full relative py-4 flex flex-col items-center">
+        <section className="w-full relative flex flex-col items-center">
           
-          {/* CARDS DISPLAY CONTAINER */}
-          <div className="relative w-full h-[360px] sm:h-[390px] flex items-center justify-center overflow-visible">
+          {/* CARDS DISPLAY TRACK */}
+          <div className="relative w-full h-[360px] sm:h-[380px] flex items-center justify-center overflow-visible">
             {CATEGORIES.map((cat, idx) => {
-              // Calculate distance from center
               let diff = idx - activeIndex;
-              // Wrap around for seamless infinite loop feel
               if (diff > CATEGORIES.length / 2) diff -= CATEGORIES.length;
               if (diff < -CATEGORIES.length / 2) diff += CATEGORIES.length;
 
               const isCenter = diff === 0;
-              const isVisible = Math.abs(diff) <= 2; // Show center and 2 neighbors on each side
+              const isVisible = Math.abs(diff) <= 2;
 
               if (!isVisible) return null;
 
-              // Straight Horizontal Math:
-              // Zero tilt, zero arch dip — pure horizontal offset with depth scaling
-              const xOffset = diff * 265;
+              const xOffset = diff * 280;
               const scale = isCenter ? 1.05 : 0.92;
-              const opacity = isCenter ? 1 : Math.max(0.45, 0.85 - Math.abs(diff) * 0.22);
+              const opacity = isCenter ? 1 : Math.max(0.4, 0.85 - Math.abs(diff) * 0.25);
               const zIndex = 20 - Math.abs(diff);
-
-              const Icon = cat.icon;
 
               return (
                 <div
@@ -284,47 +230,50 @@ export default function LandingPage() {
                   }}
                 >
                   <div 
-                    className={`w-[230px] sm:w-[260px] h-[300px] sm:h-[330px] rounded-3xl p-6 sm:p-7 flex flex-col justify-between text-left transition-all duration-300 border
+                    className={`w-[240px] sm:w-[260px] h-[330px] sm:h-[350px] rounded-3xl p-5 sm:p-6 flex flex-col justify-between text-left transition-all duration-300 border
                       ${
                         isCenter
-                          ? "bg-white shadow-[0_25px_60px_-15px_rgba(0,0,0,0.14)] border-neutral-200/90 ring-1 ring-neutral-900/10"
-                          : "bg-white/85 backdrop-blur-md shadow-[0_15px_35px_-10px_rgba(0,0,0,0.06)] border-neutral-200/50 hover:bg-white"
+                          ? "bg-white shadow-[0_20px_50px_-15px_rgba(0,0,0,0.12)] border-neutral-200/90 ring-1 ring-neutral-900/5"
+                          : "bg-white/80 backdrop-blur-md shadow-[0_10px_30px_-10px_rgba(0,0,0,0.05)] border-neutral-200/50 hover:bg-white"
                       }
                     `}
                   >
-                    {/* Card Top: Vector Icon */}
+                    {/* Top: Category Number & Active Indicator */}
                     <div className="flex items-center justify-between">
-                      <div 
-                        className="w-12 h-12 rounded-2xl flex items-center justify-center transition-colors duration-300"
-                        style={{ 
-                          backgroundColor: isCenter ? cat.theme.bg : "#f5f5f7",
-                          color: isCenter ? cat.theme.accent : "#737373"
-                        }}
-                      >
-                        <Icon className="w-6 h-6" strokeWidth={1.8} />
-                      </div>
+                      <span className="text-[11px] font-bold tracking-wider uppercase text-neutral-400">
+                        0{idx + 1}
+                      </span>
 
                       {isCenter && (
-                        <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-neutral-900 text-white">
-                          Active
-                        </span>
+                        <span className="w-2 h-2 rounded-full bg-neutral-900" />
                       )}
                     </div>
 
-                    {/* Card Middle: Content */}
-                    <div className="space-y-1.5">
-                      <span className="text-xs font-semibold text-neutral-400 uppercase tracking-widest">
-                        Category {idx + 1}
-                      </span>
-                      <h3 className="font-display font-bold text-xl sm:text-2xl text-neutral-900 leading-tight">
+                    {/* 3D Toy Plastic Icon Centerpiece */}
+                    <div className="my-auto py-1 flex items-center justify-center">
+                      <div className={`relative transition-transform duration-500 ease-out ${isCenter ? "scale-105 -translate-y-1" : "scale-95 opacity-85"}`}>
+                        <Image
+                          src={cat.image}
+                          alt={cat.name}
+                          width={160}
+                          height={160}
+                          className="w-32 h-32 sm:w-36 sm:h-36 object-contain mix-blend-multiply pointer-events-none select-none transition-transform duration-300"
+                          priority={isCenter}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Middle: Name & Tagline */}
+                    <div>
+                      <h3 className="font-display font-bold text-2xl text-neutral-900 leading-tight mb-1">
                         {cat.name}
                       </h3>
-                      <p className="text-xs sm:text-sm text-neutral-500 leading-relaxed line-clamp-2">
-                        {cat.description}
+                      <p className="text-xs sm:text-[13px] text-neutral-500 leading-relaxed line-clamp-2">
+                        {cat.tagline}
                       </p>
                     </div>
 
-                    {/* Card Bottom: Action CTA */}
+                    {/* Bottom: Action Button */}
                     <div className="pt-3 border-t border-neutral-100 flex items-center justify-between">
                       {isCenter ? (
                         <Link
@@ -354,35 +303,17 @@ export default function LandingPage() {
             })}
           </div>
 
-          {/* ----------------------------------------------------------- */}
-          {/* HORIZONTAL ANALOG RULER TICK MARKS                          */}
-          {/* ----------------------------------------------------------- */}
-          <div className="w-full max-w-md mx-auto flex items-center justify-center gap-1.5 py-3 pointer-events-none select-none opacity-45">
-            {Array.from({ length: 31 }).map((_, i) => (
-              <div 
-                key={i} 
-                className={`rounded-full transition-all duration-300 ${
-                  i === 15 
-                    ? "h-4 w-[2px] bg-neutral-900" 
-                    : i % 5 === 0 
-                      ? "h-3 w-[1.5px] bg-neutral-700" 
-                      : "h-1.5 w-[1px] bg-neutral-400"
-                }`}
-              />
-            ))}
-          </div>
-
-          {/* DIAL CONTROLS (Arrows & Indicator dots) */}
-          <div className="flex items-center gap-6 mt-4 z-20">
+          {/* Minimal Controls */}
+          <div className="flex items-center gap-6 mt-6 z-20">
             <button
               onClick={handlePrev}
               aria-label="Previous category"
-              className="w-11 h-11 rounded-full bg-white/80 backdrop-blur-md border border-neutral-300/80 text-neutral-700 flex items-center justify-center hover:bg-white hover:scale-105 active:scale-95 transition-all shadow-sm"
+              className="w-10 h-10 rounded-full bg-white/80 backdrop-blur-md border border-neutral-200 text-neutral-700 flex items-center justify-center hover:bg-white hover:scale-105 active:scale-95 transition-all shadow-sm"
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
 
-            {/* Category Indicator Pills */}
+            {/* Clean Progress Pills */}
             <div className="flex items-center gap-1.5">
               {CATEGORIES.map((_, i) => (
                 <button
@@ -391,8 +322,8 @@ export default function LandingPage() {
                   aria-label={`Go to category ${i + 1}`}
                   className={`h-1.5 rounded-full transition-all duration-300 ${
                     i === activeIndex 
-                      ? "w-8 bg-neutral-900" 
-                      : "w-2 bg-neutral-300 hover:bg-neutral-400"
+                      ? "w-7 bg-neutral-900" 
+                      : "w-1.5 bg-neutral-300 hover:bg-neutral-400"
                   }`}
                 />
               ))}
@@ -401,7 +332,7 @@ export default function LandingPage() {
             <button
               onClick={handleNext}
               aria-label="Next category"
-              className="w-11 h-11 rounded-full bg-white/80 backdrop-blur-md border border-neutral-300/80 text-neutral-700 flex items-center justify-center hover:bg-white hover:scale-105 active:scale-95 transition-all shadow-sm"
+              className="w-10 h-10 rounded-full bg-white/80 backdrop-blur-md border border-neutral-200 text-neutral-700 flex items-center justify-center hover:bg-white hover:scale-105 active:scale-95 transition-all shadow-sm"
             >
               <ChevronRight className="w-5 h-5" />
             </button>
@@ -411,18 +342,9 @@ export default function LandingPage() {
 
       </main>
 
-      {/* FOOTER */}
-      <footer className="w-full border-t border-neutral-200/60 py-6 px-6 z-10 bg-white/30 backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-neutral-500 font-medium">
-          <div className="flex items-center gap-3">
-            <span className="font-display font-bold text-neutral-800 text-sm">Find My Taste</span>
-            <span>•</span>
-            <span>The Personal Aesthetic Index</span>
-          </div>
-          <div>
-            © {new Date().getFullYear()} Find My Taste. Clean editorial design.
-          </div>
-        </div>
+      {/* MINIMAL FOOTER */}
+      <footer className="w-full py-5 px-6 z-10 text-center text-xs text-neutral-400 font-medium">
+        Find My Taste © {new Date().getFullYear()}
       </footer>
     </div>
   );

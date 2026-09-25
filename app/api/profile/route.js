@@ -18,7 +18,7 @@ export async function POST(request) {
 
     const genAI = new GoogleGenerativeAI(apiKey);
     const model = genAI.getGenerativeModel({
-      model: "gemini-3.8-flash",
+      model: "gemini-1.5-flash",
       generationConfig: { responseMimeType: "application/json" }
     });
 
@@ -123,6 +123,8 @@ Colors must reflect emotional tone:
         oneliner: `Your ${category} taste is an uncompromising journey through depth, passion, and personal discovery.`
       };
     }
+
+    profileData.category = category;
 
     // --- Save to Supabase Server-Side ---
     const shareId = crypto.randomUUID();

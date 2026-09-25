@@ -45,7 +45,7 @@ export default function CategoryCard({ category }) {
           </p>
         </div>
       </div>
-      
+
       {/* Decorative arrow showing clickability */}
       <span className="absolute right-6 bottom-6 text-neutral-600 group-hover:text-white group-hover:translate-x-1 transition-all duration-300">
         →
