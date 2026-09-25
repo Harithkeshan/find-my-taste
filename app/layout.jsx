@@ -1,10 +1,10 @@
-import { Syne, Plus_Jakarta_Sans } from "next/font/google";
+import { Outfit, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 
-const syne = Syne({
-  weight: ["700", "800"],
+const outfit = Outfit({
+  weight: ["600", "700", "800", "900"],
   subsets: ["latin"],
-  variable: "--font-syne",
+  variable: "--font-outfit",
 });
 
 const plusJakarta = Plus_Jakarta_Sans({
@@ -21,7 +21,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`${syne.variable} ${plusJakarta.variable} ${plusJakarta.className} antialiased text-base font-normal`}>
+      <body className={`${outfit.variable} ${plusJakarta.variable} ${plusJakarta.className} antialiased text-base font-normal`}>
         {children}
       </body>
     </html>
