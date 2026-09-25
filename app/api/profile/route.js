@@ -22,23 +22,20 @@ export async function POST(request) {
       generationConfig: { responseMimeType: "application/json" }
     });
 
-    const buildPrompt = (thinSections = null) => {
-      const expansionNote = thinSections
-        ? `\n\nSome sections were too short. You MUST rewrite these sections with much more depth: ${thinSections.map(s => `"${s}"`).join(", ")}. Each must be at least 150 words.\n`
-        : "";
-
-      // PART 1 — Instructions only (no placeholder text inside schema)
+    const buildPrompt = () => {
+      // PART 1 — Instructions: concise, punchy, well-organized with bullet points
       const instructions = `You are an expert taste profiler. A user completed a taste quiz in the ${category} category.
 
 Their answers: ${JSON.stringify(answers)}
-${expansionNote}
-Generate a taste profile JSON. Critical rules:
-- Each section body MUST be 4-6 full sentences
-- Write in second person (you, your)
-- Reference their specific answers directly
-- Be psychological, vivid, and surprisingly accurate
-- Make each body feel like a personalized horoscope
-- Minimum 150 words per section body
+
+Generate a taste profile JSON. Critical rules for section bodies:
+- DO NOT write huge walls of text or dense paragraphs.
+- Keep each section body crisp, scannable, and well-organized (around 40-70 words per section).
+- Structure each section body as:
+  1. An intriguing 1-sentence opening hook (in second person: you, your).
+  2. Followed by 2 punchy bullet points (using "•") detailing specific nuances directly tied to their quiz choices.
+- Be psychological, vivid, and surprisingly accurate.
+- Tone: sophisticated, personalized horoscope.
 
 Colors must reflect emotional tone:
 - Dark, intense, psychological -> deep purples, crimsons, near blacks
@@ -46,7 +43,7 @@ Colors must reflect emotional tone:
 - Warm, social, feel-good -> amber, gold, coral
 - Intellectual, curious, complex -> midnight blue, silver, deep teal`;
 
-      // PART 2 — Clean JSON schema with empty strings only (no instructions inside)
+      // PART 2 — Clean JSON schema
       const schema = `Return raw JSON only, no markdown, no code blocks:
 {
   "archetype": "",
@@ -80,63 +77,39 @@ Colors must reflect emotional tone:
           lastError = err;
           console.warn(`[profile API] Gemini call attempt ${attempt} failed: ${err.message}`);
           if (attempt < maxAttempts) {
-            await new Promise(res => setTimeout(res, 1000 * attempt));
+            await new Promise(res => setTimeout(res, 1200 * attempt));
           }
         }
       }
       throw lastError;
     };
 
-    // --- First call ---
+    // --- Single fast LLM call with retry ---
     let profileData;
     try {
       const result = await callGeminiWithRetry(buildPrompt());
       let responseText = result.response.text();
       responseText = responseText.replace(/```json/gi, "").replace(/```/g, "").trim();
       profileData = JSON.parse(responseText);
-
-      // --- Log character counts to confirm section depth ---
-      console.log("[profile] Section body character counts (first call):");
-      (profileData.sections || []).forEach(s => {
-        const count = s.body?.length || 0;
-        const status = count >= 500 ? "✅" : "❌ TOO SHORT";
-        console.log(`  "${s.heading}": ${count} chars ${status}`);
-      });
-
-      // --- Validation: check if any section body is too short ---
-      const MIN_CHARS = 100;
-      const thinSections = (profileData.sections || [])
-        .filter(s => !s.body || s.body.length < MIN_CHARS)
-        .map(s => s.heading);
-
-      if (thinSections.length > 0) {
-        console.warn(`[profile] Thin sections detected (< ${MIN_CHARS} chars): ${thinSections.join(", ")}. Retrying with expansion prompt.`);
-        try {
-          const retryResult = await callGeminiWithRetry(buildPrompt(thinSections), 2);
-          let retryText = retryResult.response.text();
-          retryText = retryText.replace(/```json/gi, "").replace(/```/g, "").trim();
-          const retryData = JSON.parse(retryText);
-
-          profileData.sections = profileData.sections.map(section => {
-            if (thinSections.includes(section.heading)) {
-              const expanded = retryData.sections?.find(s => s.heading === section.heading);
-              return expanded || section;
-            }
-            return section;
-          });
-        } catch (retryErr) {
-          console.warn("[profile API] Expansion prompt retry failed, continuing with initial profile:", retryErr.message);
-        }
-      }
+      console.log(`[profile API] ✅ Successfully generated profile with archetype: "${profileData.archetype}"`);
     } catch (genError) {
       console.error("[profile API] All Gemini API attempts failed. Using high-quality fallback profile:", genError.message);
       profileData = {
         archetype: "The Eclectic Connoisseur",
         tagline: `A distinct and passionate explorer of all things ${category}.`,
         sections: [
-          { heading: "What drives you", body: "You are driven by authenticity and emotional depth. Rather than following mainstream trends passively, you seek out experiences that resonate with your inner values and challenge your perspective." },
-          { heading: "Your signature taste", body: "Your taste balances comfort with curiosity. You appreciate intricate craftsmanship, vivid storytelling, and nuanced details that most casual observers tend to overlook." },
-          { heading: "What makes you unique", body: "You bring an open-minded and intuitive lens to everything you encounter. Your choices reflect a rich personal philosophy that values meaningful connections over superficial hype." }
+          { 
+            heading: "What drives you", 
+            body: "You crave authenticity and emotional depth over passive mainstream comfort.\n• Core Driver: Drawn to tension, complex themes, and stories that refuse easy resolutions.\n• The Payoff: Meaningful immersion that leaves a lingering impression long after it ends." 
+          },
+          { 
+            heading: "Your signature taste", 
+            body: "Your taste balances comfort with an appetite for intricate craft.\n• Texture: You appreciate nuanced pacing and rich atmosphere that casual observers overlook.\n• Defining Aesthetic: Layered, atmospheric, and bold." 
+          },
+          { 
+            heading: "What makes you unique", 
+            body: "You bring an intuitive, highly discerning lens to everything you experience.\n• Perspective: You filter choices through personal resonance rather than algorithmic trends.\n• Trait: Unapologetic about your eclectic, specific tastes." 
+          }
         ],
         traits: ["Intuitive", "Passionate", "Discerning"],
         recommendations: [
