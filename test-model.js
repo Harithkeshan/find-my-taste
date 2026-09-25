@@ -6,19 +6,21 @@ async function test() {
   const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
   
   const modelsToTry = [
-    'gemini-2.0-flash',
-    'gemini-1.5-flash',
+    'gemini-3.8-flash',
+    'gemini-3.8-pro',
+    'gemini-3.5-pro',
   ];
   
-  for (const modelName of modelsToTry) {
+  for (let attempt = 1; attempt <= 3; attempt++) {
     try {
-      process.stdout.write(`Trying ${modelName}... `);
-      const model = genAI.getGenerativeModel({ model: modelName });
+      console.log(`Attempt ${attempt} for gemini-3.8-flash...`);
+      const model = genAI.getGenerativeModel({ model: 'gemini-3.8-flash' });
       const result = await model.generateContent('Say OK');
-      console.log(`✅ ${result.response.text().trim().substring(0, 50)}`);
+      console.log(`✅ Success: ${result.response.text().trim()}`);
+      break;
     } catch (e) {
-      // Print full error for diagnosis
-      console.log(`❌ FULL ERROR: ${e.message}`);
+      console.log(`❌ Attempt ${attempt} failed: ${e.message}`);
+      await new Promise(r => setTimeout(r, 1000));
     }
   }
 }
