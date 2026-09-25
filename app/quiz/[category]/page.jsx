@@ -64,22 +64,19 @@ export default function QuizScreen() {
 
     const isEndOfRound = newAnswers.length === 3 || newAnswers.length === 6 || newAnswers.length === 9;
 
+    if (newAnswers.length >= 9) {
+      // Final question: instantly start profile generation without artificial delay
+      await generateTasteProfile(newAnswers);
+      return;
+    }
+
     if (isEndOfRound) {
       if (newAnswers.length === 3) setMotivationalHook("We're already seeing a pattern... keep going 🔥");
       else if (newAnswers.length === 6) setMotivationalHook("You're not like most people who take this quiz... almost there ⚡");
-      else if (newAnswers.length === 9) setMotivationalHook("Last set — your profile is being built as you answer 🎯");
-      
-      let backgroundTask;
-      if (newAnswers.length >= 9) {
-        backgroundTask = generateTasteProfile(newAnswers);
-      }
 
-      // Show hook for 2.5s
-      await new Promise(r => setTimeout(r, 2500));
+      // Show brief, snappy 1-second cadence transition
+      await new Promise(r => setTimeout(r, 1000));
       setMotivationalHook(null);
-      if (backgroundTask) {
-        await backgroundTask;
-      }
     }
   };
 
@@ -92,10 +89,9 @@ export default function QuizScreen() {
         prev.includes(option) ? prev.filter(o => o !== option) : [...prev, option]
       );
     } else {
-      // Single selection flow
+      // Single selection flow: crisp 260ms feedback delay
       setSelectedOptions([option]);
-      // Pause to let user see their selection light up
-      await new Promise(r => setTimeout(r, 500)); 
+      await new Promise(r => setTimeout(r, 260)); 
       await advanceQuestion([option]);
     }
   };
@@ -106,12 +102,12 @@ export default function QuizScreen() {
   };
 
   // -----------------------------------------------------
-  // RENDER: Motivational Hook (Full Screen)
+  // RENDER: Motivational Hook (Snappy Interstitial)
   // -----------------------------------------------------
   if (motivationalHook) {
     return (
-      <main className="min-h-screen flex items-center justify-center bg-[#0a0a0a] text-white p-6 transition-opacity duration-500">
-        <h1 className="text-3xl md:text-5xl font-extrabold text-center bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 animate-gradient leading-tight">
+      <main className="min-h-screen flex items-center justify-center bg-[#09090b] text-white p-6 transition-opacity duration-300">
+        <h1 className="text-3xl md:text-5xl font-extrabold text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-400 to-indigo-400 leading-tight tracking-tight">
           {motivationalHook}
         </h1>
       </main>
@@ -119,16 +115,27 @@ export default function QuizScreen() {
   }
 
   // -----------------------------------------------------
-  // RENDER: Final Generation Loading Screen (Full Screen)
+  // RENDER: Final Generation Loading Screen
   // -----------------------------------------------------
   if (isGeneratingProfile) {
     return (
-      <main className="min-h-screen flex flex-col items-center justify-center bg-[#0a0a0a] text-white p-6 transition-opacity duration-500">
-        <div className="w-16 h-16 border-4 border-white/20 border-t-white rounded-full animate-spin mb-8 shadow-[0_0_15px_rgba(255,255,255,0.5)]"></div>
-        <h2 className="text-2xl md:text-4xl font-extrabold animate-pulse text-center tracking-tight">
-          Building your taste profile...
+      <main className="min-h-screen flex flex-col items-center justify-center bg-[#09090b] text-white p-6 relative overflow-hidden">
+        {/* Ambient atmospheric glow */}
+        <div className="absolute w-96 h-96 rounded-full bg-purple-600/10 blur-[120px] pointer-events-none" />
+        <div className="absolute w-72 h-72 rounded-full bg-indigo-600/10 blur-[100px] pointer-events-none" />
+
+        {/* Glowing Orb Spinner */}
+        <div className="relative mb-8">
+          <div className="w-20 h-20 border-2 border-purple-500/20 border-t-purple-400 rounded-full animate-spin shadow-[0_0_30px_rgba(168,85,247,0.3)]"></div>
+          <div className="absolute inset-2 border-2 border-indigo-500/20 border-b-indigo-400 rounded-full animate-spin [animation-direction:reverse] [animation-duration:1.5s]"></div>
+        </div>
+
+        <h2 className="text-2xl md:text-4xl font-display font-extrabold text-center tracking-tight text-white mb-3">
+          Synthesizing your taste profile...
         </h2>
-        <p className="mt-4 text-white/50 text-center text-lg font-medium">Analyzing {TOTAL_QUESTIONS} data points</p>
+        <p className="text-white/50 text-center text-sm md:text-base font-medium">
+          Analyzing your 9 unique data points with AI
+        </p>
       </main>
     );
   }

@@ -73,7 +73,7 @@ const TasteCard = forwardRef(({ profile }, ref) => {
       {/* Card Content - Middle (archetype + tagline) */}
       <div className="relative z-10 flex flex-col justify-center flex-1 my-4 space-y-3">
         <h2 
-          className="font-display font-normal leading-[1.25] tracking-wider text-white drop-shadow-2xl text-2xl sm:text-3xl"
+          className="font-display font-extrabold leading-[1.15] tracking-tight text-white drop-shadow-2xl text-3xl sm:text-4xl"
         >
           {archetype}
         </h2>

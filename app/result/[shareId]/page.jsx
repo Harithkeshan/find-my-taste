@@ -131,10 +131,10 @@ export default function ResultScreen() {
       {/* TOP HALF: PROFILE SECTION */}
       <section className="max-w-4xl mx-auto px-6 pt-20 pb-16">
         <div className="text-center mb-16 animate-fade-up" style={sectionDelay(0)}>
-          <h1 className="text-5xl md:text-7xl font-black tracking-tighter mb-4 text-transparent bg-clip-text bg-gradient-to-br from-white to-white/60">
+          <h1 className="font-display text-5xl md:text-7xl font-extrabold tracking-tight mb-4 text-transparent bg-clip-text bg-gradient-to-br from-white via-white/95 to-white/70">
             {profile.archetype}
           </h1>
-          <p className="text-xl md:text-2xl font-light text-white/60 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-xl md:text-2xl font-normal text-white/60 max-w-2xl mx-auto leading-relaxed">
             {profile.tagline}
           </p>
         </div>
@@ -143,11 +143,15 @@ export default function ResultScreen() {
           {profile.sections.map((section, idx) => (
             <div 
               key={idx} 
-              className="bg-white/5 border border-white/10 rounded-3xl p-10 hover:bg-white/[0.07] transition-colors duration-300 animate-fade-up"
+              className="bg-[#111114]/90 border border-white/10 rounded-3xl p-8 md:p-10 hover:border-purple-500/30 transition-all duration-300 shadow-[0_10px_30px_rgba(0,0,0,0.5)] animate-fade-up backdrop-blur-xl"
               style={sectionDelay(idx + 1)}
             >
-              <h3 className="text-xs font-black uppercase tracking-widest text-white/40 mb-5">{section.heading}</h3>
-              <p className="text-lg md:text-xl leading-[1.8] text-white/85 whitespace-pre-line">{section.body}</p>
+              <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-purple-400 mb-4 flex items-center gap-2">
+                <span>✦</span> {section.heading}
+              </h3>
+              <p className="text-base md:text-lg leading-[1.8] text-white/85 whitespace-pre-line font-normal">
+                {section.body}
+              </p>
             </div>
           ))}
         </div>

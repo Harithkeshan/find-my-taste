@@ -66,9 +66,9 @@ export default function LandingPage() {
             ✨ AI-Powered Personality Analysis
           </div>
           
-          <h1 className="text-5xl md:text-7xl font-normal tracking-wider select-none space-x-2">
+          <h1 className="font-display text-5xl md:text-7xl font-extrabold tracking-tight select-none space-x-2">
             <span>Find My</span>{" "}
-            <span className="bg-gradient-to-r from-[#ff007f] via-[#7f00ff] to-[#00f0ff] bg-[length:200%_auto] bg-clip-text text-transparent animate-gradient inline-block ml-3">
+            <span className="bg-gradient-to-r from-rose-400 via-purple-400 to-indigo-400 bg-[length:200%_auto] bg-clip-text text-transparent animate-gradient inline-block ml-3">
               Taste
             </span>
           </h1>

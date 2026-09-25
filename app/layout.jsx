@@ -1,10 +1,10 @@
-import { Spicy_Rice, Plus_Jakarta_Sans } from "next/font/google";
+import { Syne, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 
-const spicyRice = Spicy_Rice({
-  weight: "400",
+const syne = Syne({
+  weight: ["700", "800"],
   subsets: ["latin"],
-  variable: "--font-spicy-rice",
+  variable: "--font-syne",
 });
 
 const plusJakarta = Plus_Jakarta_Sans({
@@ -21,7 +21,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`${spicyRice.variable} ${plusJakarta.variable} ${plusJakarta.className} antialiased text-base font-normal`}>
+      <body className={`${syne.variable} ${plusJakarta.variable} ${plusJakarta.className} antialiased text-base font-normal`}>
         {children}
       </body>
     </html>

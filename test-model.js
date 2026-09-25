@@ -11,15 +11,21 @@ async function test() {
     'gemini-3.5-pro',
   ];
   
+  const model = genAI.getGenerativeModel({
+    model: 'gemini-3.8-flash',
+    generationConfig: { responseMimeType: 'application/json' }
+  });
+
+  const prompt = `Return JSON only: { "archetype": "Test", "tagline": "Test", "sections": [], "traits": [], "recommendations": [], "colors": [], "oneliner": "Test" }`;
+
   for (let attempt = 1; attempt <= 3; attempt++) {
     try {
-      console.log(`Attempt ${attempt} for gemini-3.8-flash...`);
-      const model = genAI.getGenerativeModel({ model: 'gemini-3.8-flash' });
-      const result = await model.generateContent('Say OK');
-      console.log(`✅ Success: ${result.response.text().trim()}`);
+      console.log(`Attempt ${attempt}...`);
+      const result = await model.generateContent(prompt);
+      console.log(`✅ Success:`, result.response.text().substring(0, 100));
       break;
     } catch (e) {
-      console.log(`❌ Attempt ${attempt} failed: ${e.message}`);
+      console.log(`❌ Error: ${e.message}`);
       await new Promise(r => setTimeout(r, 1000));
     }
   }
