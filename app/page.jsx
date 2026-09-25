@@ -245,12 +245,12 @@ export default function LandingPage() {
         </div>
 
         {/* ----------------------------------------------------------- */}
-        {/* RADIAL ARC / DIAL CATEGORY CAROUSEL                         */}
+        {/* HORIZONTAL LINEAR SLIDER (Flat, perfectly legible)          */}
         {/* ----------------------------------------------------------- */}
-        <section className="w-full relative py-6 flex flex-col items-center">
+        <section className="w-full relative py-4 flex flex-col items-center">
           
           {/* CARDS DISPLAY CONTAINER */}
-          <div className="relative w-full h-[360px] sm:h-[400px] flex items-center justify-center overflow-visible">
+          <div className="relative w-full h-[360px] sm:h-[390px] flex items-center justify-center overflow-visible">
             {CATEGORIES.map((cat, idx) => {
               // Calculate distance from center
               let diff = idx - activeIndex;
@@ -263,15 +263,11 @@ export default function LandingPage() {
 
               if (!isVisible) return null;
 
-              // Arc Mathematics:
-              // X: horizontal spread
-              // Y: vertical drop forming an arch curve
-              // Rotate: gentle fan-out angle
-              const xOffset = diff * 210;
-              const yOffset = Math.pow(Math.abs(diff), 1.8) * 28;
-              const rotateDeg = diff * 9;
-              const scale = isCenter ? 1.05 : 1 - Math.abs(diff) * 0.08;
-              const opacity = isCenter ? 1 : Math.max(0.4, 0.9 - Math.abs(diff) * 0.25);
+              // Straight Horizontal Math:
+              // Zero tilt, zero arch dip — pure horizontal offset with depth scaling
+              const xOffset = diff * 265;
+              const scale = isCenter ? 1.05 : 0.92;
+              const opacity = isCenter ? 1 : Math.max(0.45, 0.85 - Math.abs(diff) * 0.22);
               const zIndex = 20 - Math.abs(diff);
 
               const Icon = cat.icon;
@@ -282,17 +278,17 @@ export default function LandingPage() {
                   onClick={() => setActiveIndex(idx)}
                   className="absolute cursor-pointer transition-all duration-500 ease-out will-change-transform"
                   style={{
-                    transform: `translate3d(${xOffset}px, ${yOffset}px, 0px) rotate(${rotateDeg}deg) scale(${scale})`,
+                    transform: `translate3d(${xOffset}px, 0px, 0px) scale(${scale})`,
                     opacity,
                     zIndex,
                   }}
                 >
                   <div 
-                    className={`w-[220px] sm:w-[250px] h-[290px] sm:h-[320px] rounded-3xl p-6 sm:p-7 flex flex-col justify-between text-left transition-all duration-300 border
+                    className={`w-[230px] sm:w-[260px] h-[300px] sm:h-[330px] rounded-3xl p-6 sm:p-7 flex flex-col justify-between text-left transition-all duration-300 border
                       ${
                         isCenter
-                          ? "bg-white shadow-[0_25px_60px_-15px_rgba(0,0,0,0.12)] border-neutral-200/80 ring-2 ring-neutral-900/5"
-                          : "bg-white/80 backdrop-blur-md shadow-[0_15px_35px_-10px_rgba(0,0,0,0.06)] border-neutral-200/50 hover:bg-white"
+                          ? "bg-white shadow-[0_25px_60px_-15px_rgba(0,0,0,0.14)] border-neutral-200/90 ring-1 ring-neutral-900/10"
+                          : "bg-white/85 backdrop-blur-md shadow-[0_15px_35px_-10px_rgba(0,0,0,0.06)] border-neutral-200/50 hover:bg-white"
                       }
                     `}
                   >
@@ -309,7 +305,7 @@ export default function LandingPage() {
                       </div>
 
                       {isCenter && (
-                        <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-neutral-900 text-white">
+                        <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-neutral-900 text-white">
                           Active
                         </span>
                       )}
@@ -323,25 +319,34 @@ export default function LandingPage() {
                       <h3 className="font-display font-bold text-xl sm:text-2xl text-neutral-900 leading-tight">
                         {cat.name}
                       </h3>
-                      <p className="text-xs sm:text-sm text-neutral-500 leading-snug line-clamp-2">
+                      <p className="text-xs sm:text-sm text-neutral-500 leading-relaxed line-clamp-2">
                         {cat.description}
                       </p>
                     </div>
 
                     {/* Card Bottom: Action CTA */}
                     <div className="pt-3 border-t border-neutral-100 flex items-center justify-between">
-                      <span className="text-xs font-semibold text-neutral-700">
-                        {isCenter ? "Start Quiz" : "Select"}
-                      </span>
-                      <div 
-                        className={`w-7 h-7 rounded-full flex items-center justify-center transition-all duration-300 ${
-                          isCenter 
-                            ? "bg-neutral-900 text-white shadow-sm" 
-                            : "bg-neutral-100 text-neutral-400"
-                        }`}
-                      >
-                        <ArrowRight className="w-3.5 h-3.5" />
-                      </div>
+                      {isCenter ? (
+                        <Link
+                          href={`/quiz/${cat.id}`}
+                          onClick={(e) => e.stopPropagation()}
+                          className="w-full flex items-center justify-between py-1 group/btn"
+                        >
+                          <span className="text-xs font-bold text-neutral-900 group-hover/btn:underline">
+                            Start Quiz
+                          </span>
+                          <div className="w-7 h-7 rounded-full bg-neutral-900 text-white flex items-center justify-center shadow-sm group-hover/btn:scale-105 transition-transform">
+                            <ArrowRight className="w-3.5 h-3.5" />
+                          </div>
+                        </Link>
+                      ) : (
+                        <div className="w-full flex items-center justify-between py-1 text-neutral-400">
+                          <span className="text-xs font-medium">Select</span>
+                          <div className="w-7 h-7 rounded-full bg-neutral-100 flex items-center justify-center">
+                            <ArrowRight className="w-3.5 h-3.5" />
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -350,22 +355,21 @@ export default function LandingPage() {
           </div>
 
           {/* ----------------------------------------------------------- */}
-          {/* THE ANALOG DIAL TICK MARKS (Inspired by Wellora curve)      */}
+          {/* HORIZONTAL ANALOG RULER TICK MARKS                          */}
           {/* ----------------------------------------------------------- */}
-          <div className="w-full max-w-4xl mx-auto -mt-6 sm:-mt-8 flex justify-center pointer-events-none select-none relative">
-            <svg 
-              viewBox="0 0 800 90" 
-              fill="none" 
-              className="w-full h-16 sm:h-20 stroke-neutral-400/40"
-            >
-              {/* Dial Curve with Dashed Ticks */}
-              <path 
-                d="M 50 85 Q 400 15 750 85" 
-                strokeWidth="3" 
-                strokeDasharray="3 11" 
-                strokeLinecap="round" 
+          <div className="w-full max-w-md mx-auto flex items-center justify-center gap-1.5 py-3 pointer-events-none select-none opacity-45">
+            {Array.from({ length: 31 }).map((_, i) => (
+              <div 
+                key={i} 
+                className={`rounded-full transition-all duration-300 ${
+                  i === 15 
+                    ? "h-4 w-[2px] bg-neutral-900" 
+                    : i % 5 === 0 
+                      ? "h-3 w-[1.5px] bg-neutral-700" 
+                      : "h-1.5 w-[1px] bg-neutral-400"
+                }`}
               />
-            </svg>
+            ))}
           </div>
 
           {/* DIAL CONTROLS (Arrows & Indicator dots) */}
