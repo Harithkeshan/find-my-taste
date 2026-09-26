@@ -1,34 +1,47 @@
+const fs = require('fs');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+let apiKey = process.env.GEMINI_API_KEY;
+if (!apiKey && fs.existsSync('.env.local')) {
+  const env = fs.readFileSync('.env.local', 'utf8');
+  const m = env.match(/GEMINI_API_KEY=(.*)/);
+  if (m) apiKey = m[1].trim();
+}
 
-async function test() {
-  const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
-  
-  const modelsToTry = [
-    'gemini-3.8-flash',
-    'gemini-3.8-pro',
-    'gemini-3.5-pro',
-  ];
-  
-  const model = genAI.getGenerativeModel({
-    model: 'gemini-3.8-flash',
-    generationConfig: { responseMimeType: 'application/json' }
-  });
+const genAI = new GoogleGenerativeAI(apiKey);
 
-  const prompt = `Return JSON only: { "archetype": "Test", "tagline": "Test", "sections": [], "traits": [], "recommendations": [], "colors": [], "oneliner": "Test" }`;
+const prompt = `You are an expert taste profiler. A user completed a taste quiz in the movies category.
+Their answers: [{"question":"What is your go to genre?","selectedOption":"Sci-Fi / Fantasy"}]
+Generate a taste profile JSON.
+Return raw JSON only, no markdown:
+{
+  "archetype": "The Visionary Voyager",
+  "tagline": "Explores futuristic horizons",
+  "sections": [
+    { "heading": "What drives you", "body": "You seek transformative ideas." }
+  ],
+  "traits": ["Visionary", "Analytical", "Curious"],
+  "recommendations": [{ "title": "Dune", "reason": "Grand scale worldbuilding" }],
+  "colors": ["#d97706", "#ea580c", "#fbbf24"],
+  "oneliner": "Exploring the unknown."
+}`;
 
-  for (let attempt = 1; attempt <= 3; attempt++) {
-    try {
-      console.log(`Attempt ${attempt}...`);
-      const result = await model.generateContent(prompt);
-      console.log(`✅ Success:`, result.response.text().substring(0, 100));
-      break;
-    } catch (e) {
-      console.log(`❌ Error: ${e.message}`);
-      await new Promise(r => setTimeout(r, 1000));
-    }
+async function test(name) {
+  const start = Date.now();
+  try {
+    const m = genAI.getGenerativeModel({ model: name, generationConfig: { responseMimeType: 'application/json' } });
+    const r = await m.generateContent(prompt);
+    const text = r.response.text();
+    const data = JSON.parse(text);
+    console.log(`✅ ${name} SUCCESS (${Date.now() - start}ms): Archetype -> "${data.archetype}"`);
+  } catch (e) {
+    console.log(`❌ ${name} FAILED (${Date.now() - start}ms):`, e.message);
   }
 }
 
-test();
+async function main() {
+  await test('gemini-3.5-flash');
+  await test('gemini-3.8-flash');
+}
+
+main();
